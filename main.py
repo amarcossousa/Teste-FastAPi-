@@ -1,5 +1,4 @@
 from typing import Optional
-from unicodedata import name
 from fastapi import FastAPI
 from pydantic import BaseModel
 
