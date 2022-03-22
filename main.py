@@ -1,10 +1,11 @@
-# Codigo do primeiro tutorial
+# Todos os import, incluso parte de classes comentadas
 from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
 from enum import Enum
 
 """
+# Codigo do primeiro tutorial
 app = FastAPI()
 
 class Item(BaseModel):
