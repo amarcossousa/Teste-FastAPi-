@@ -1,10 +1,11 @@
 # Todos os import, incluso parte de classes comentadas
-from typing import Optional
+from typing import Optional # Primeiro uso em Paremtros de consultas
 from fastapi import FastAPI
 from pydantic import BaseModel
 from enum import Enum
 
 """
+#1
 # Codigo do primeiro tutorial
 app = FastAPI()
 
@@ -26,7 +27,7 @@ def read_item(item_id: int, q: Optional[str] = None):
 def update_item(item_id: int, item: Item):
     return {"item_price": item.price, "item_id": item_id}
 """
-
+#2
 # Codigos do Guia 'Primeiros Passos'
 
 app = FastAPI()
@@ -74,6 +75,58 @@ async def get_model(model_name: ModelName): # Paramentro de caminho
 async def read_file(file_path: str):
     return {"file_path": file_path}
 
+#3
+#Usando paramentros de consulta
+fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+@app.get("/items")
+async def read_item(skip: int = 0, limit: int = 10):
+    return fake_items_db[skip : skip + limit]
 
+# Define padroes opcionais como 'None'
+@app.get("/item/{item_id}") 
+async def read_item(item_id: str, q: Optional[str] = None):
+    if q:
+        return {"item_id" : item_id, "q": q}
+    return {"item_id" : item_id}
+
+# Covertando paramentros para os tipos 'Bool'
+@app.get("/items/{item_id}") 
+async def read_item(item_id: str, q: Optional[str] = None, short: bool = False):
+    item = {"item_id" : item_id}
+    if q:
+        item.update({"q": q})
+    if not short:
+        item.update(
+            {"Description": "This is an amazing item that has a long description"}
+        )
+    return item
+
+# Varios paramentros de consultas
+@app.get("/users/{user_id}/items/{item_id}") 
+async def read_user_item(
+    user_id: int, item_id: str, q: Optional[str] = None, short: bool = False
+):
+    item = {"item_id": item_id, "owner_id": user_id}
+    if q:
+        item.update({"q": q})
+    if not short:
+        item.update(
+            {"description": "This is an amazong item has a long description"}
+        )
+    return item
+
+# Paramentros obrigatorios
+@app.get("/items/{item_id}")
+async def read_user_item(item_id: str, needy: str):
+    item = {"item_id": item_id, "needy": needy}
+    return item
+
+# Varios paramentros obrigatorios 'str, skip, int
+@app.get("/items/{item_id}")
+async def read_user_item(
+    item_id: str, needy: str, skip: int = 0, limit: Optional[int] = None
+):
+    item = {"item_id": item_id, "needy": needy, "skip": skip, "limit": limit}
+    return item
 
 
