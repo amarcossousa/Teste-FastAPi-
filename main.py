@@ -130,3 +130,7 @@ async def read_user_item(
     return item
 
 
+#4
+# Paramentros de consulta e validações de texto
+@app.get("/items/")
+async def read_items(q: Optional[str] = None):
